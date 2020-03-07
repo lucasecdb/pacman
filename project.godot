@@ -20,11 +20,11 @@ run/main_scene="res://scenes/Main.tscn"
 
 [display]
 
-window/size/width=168
-window/size/height=216
+window/size/width=184
+window/size/height=208
 window/size/resizable=false
-window/size/test_width=336
-window/size/test_height=432
+window/size/test_width=552
+window/size/test_height=624
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"

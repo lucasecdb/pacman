@@ -3,10 +3,7 @@
 [ext_resource path="res://assets/pacman.png" type="Texture" id=1]
 [ext_resource path="res://src/Player.gd" type="Script" id=2]
 
-[sub_resource type="CircleShape2D" id=1]
-radius = 4.40882
-
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=1]
 resource_name = "Run"
 length = 0.4
 loop = true
@@ -23,16 +20,21 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
+[sub_resource type="CircleShape2D" id=2]
+radius = 3.8482
+
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
+centered = false
 hframes = 3
-
-[node name="Hurtbox" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Run"
-anims/Run = SubResource( 2 )
+anims/Run = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 4, 4 )
+shape = SubResource( 2 )
