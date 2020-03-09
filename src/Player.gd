@@ -1,44 +1,57 @@
 extends KinematicBody2D
 
 const CELL_SIZE = 8
-const SPEED = 64
 const CELL_VECTOR = Vector2(CELL_SIZE, CELL_SIZE)
+const SPEED = 32
 
 onready var sprite = $Sprite
 
-var movement_direction = Vector2.RIGHT
+var move_dir = Vector2.RIGHT
+var prev_move_dir = move_dir
 
 func _ready():
     position = position.snapped(CELL_VECTOR)
 
 func _physics_process(delta):
-    move_and_slide(movement_direction * SPEED)
+    update_move_dir()
 
-    update_movement_dir()
+    var collided = move_and_slide(move_dir * SPEED) == Vector2.ZERO
+
+    if collided:
+        move_and_slide(prev_move_dir * SPEED)
+    else:
+        update_prev_move_dir()
 
 func _process(delta):
     update_sprite_rotation()
 
-func update_movement_dir():
+func update_prev_move_dir():
+    if move_dir == prev_move_dir:
+        return
+    position = position.snapped(CELL_VECTOR)
+    prev_move_dir = move_dir
+
+func update_move_dir():
     var left = Input.is_action_pressed("ui_left")
     var right = Input.is_action_pressed("ui_right")
     var up = Input.is_action_pressed("ui_up")
     var down = Input.is_action_pressed("ui_down")
 
-    var new_move = Vector2(int(right) - int(left), int(down) - int(up))
+    var move = Vector2( \
+        int(right) - int(left), \
+        int(down) - int(up))
 
     if (up or down) != (left or right):
-        position = position.snapped(CELL_VECTOR)
-        movement_direction = new_move
+        move_dir = move
 
 func update_sprite_rotation():
-    if movement_direction.x != 0:
+    if prev_move_dir.x != 0:
         sprite.rotation = 0
         sprite.position = Vector2.ZERO
-        sprite.flip_h = movement_direction.x < 0
-    elif movement_direction.y != 0:
+        sprite.flip_h = prev_move_dir.x < 0
+    elif prev_move_dir.y != 0:
         sprite.flip_h = false
-        if movement_direction.y > 0:
+        if prev_move_dir.y > 0:
             sprite.position.x = 8
             sprite.position.y = 0
             sprite.rotation_degrees = 90
