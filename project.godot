@@ -22,14 +22,15 @@ config/icon="res://assets/icon.png"
 [display]
 
 window/size/width=184
-window/size/height=208
+window/size/height=232
 window/size/resizable=false
 window/size/test_width=552
-window/size/test_height=624
+window/size/test_height=696
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
 [rendering]
 
+quality/2d/use_pixel_snap=true
 environment/default_environment="res://default_env.tres"

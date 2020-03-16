@@ -4,7 +4,8 @@ const CELL_SIZE = 8
 const CELL_VECTOR = Vector2(CELL_SIZE, CELL_SIZE)
 const SPEED = 32
 
-onready var sprite = $Sprite
+onready var sprite: Sprite = $Sprite
+onready var collision_ray: RayCast2D = $CollisionRay
 
 var move_dir = Vector2.RIGHT
 var prev_move_dir = move_dir
@@ -15,12 +16,22 @@ func _ready():
 func _physics_process(delta):
     update_move_dir()
 
+    var move_vector_used = move_dir
     var collided = move_and_slide(move_dir * SPEED) == Vector2.ZERO
 
     if collided:
         move_and_slide(prev_move_dir * SPEED)
+        move_vector_used = prev_move_dir
     else:
         update_prev_move_dir()
+
+    collision_ray.cast_to = move_vector_used.normalized() * (CELL_SIZE / 2)
+
+    if collision_ray.is_colliding():
+        var foods_tilemap: TileMap = get_parent().get_node("Foods")
+        var food_position = foods_tilemap.world_to_map(collision_ray.get_collision_point())
+        food_position -= collision_ray.get_collision_normal()
+        foods_tilemap.set_cellv(food_position, -1)
 
 func _process(delta):
     update_sprite_rotation()
